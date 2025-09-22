@@ -74,7 +74,8 @@ public class ApiTaskRunner implements CommandLineRunner {
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.setBearerAuth(accessToken);
+        // This line sets the header with only the token value, as requested.
+        headers.set("Authorization", accessToken);
 
         HttpEntity<FinalRequest> requestEntity = new HttpEntity<>(finalRequestBody, headers);
 
