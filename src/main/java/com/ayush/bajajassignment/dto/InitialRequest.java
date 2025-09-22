@@ -1,8 +1,8 @@
-package com.example.bajaj;
+package com.ayush.bajajassignment.dto;
 
 import lombok.Data;
 
-@Data // Lombok annotation for getters, setters, etc.
+@Data
 public class InitialRequest {
     private String name;
     private String regNo;

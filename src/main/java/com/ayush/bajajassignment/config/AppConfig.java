@@ -1,4 +1,4 @@
-package com.example.bajaj.config;
+package com.ayush.bajajassignment.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

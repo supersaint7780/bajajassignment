@@ -1,4 +1,4 @@
-package com.example.bajaj;
+package com.ayush.bajajassignment.dto;
 
 import lombok.Data;
 

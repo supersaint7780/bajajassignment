@@ -6,8 +6,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class BajajassignmentApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(BajajassignmentApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(BajajassignmentApplication.class, args);
+    }
 
 }

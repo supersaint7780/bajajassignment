@@ -1,8 +1,8 @@
-package com.example.bajaj.runner;
+package com.ayush.bajajassignment.runner;
 
-import com.example.bajaj.dto.FinalRequest;
-import com.example.bajaj.dto.InitialRequest;
-import com.example.bajaj.dto.InitialResponse;
+import com.ayush.bajajassignment.dto.FinalRequest;
+import com.ayush.bajajassignment.dto.InitialRequest;
+import com.ayush.bajajassignment.dto.InitialResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
@@ -15,7 +15,6 @@ import org.springframework.web.client.RestTemplate;
 @Component
 public class ApiTaskRunner implements CommandLineRunner {
 
-    // Use a proper logger for application output
     private static final Logger logger = LoggerFactory.getLogger(ApiTaskRunner.class);
 
     private final RestTemplate restTemplate;
@@ -28,7 +27,7 @@ public class ApiTaskRunner implements CommandLineRunner {
     public void run(String... args) {
         logger.info("Application started, running API tasks...");
 
-        // Prepare the initial request body with your details [cite: 10, 11]
+        // Prepare the initial request body with your details
         InitialRequest userDetails = new InitialRequest();
         userDetails.setName("Ayush Maurya");
         userDetails.setRegNo("2240401124");
@@ -49,7 +48,6 @@ public class ApiTaskRunner implements CommandLineRunner {
     }
 
     private InitialResponse generateWebhook(InitialRequest requestBody) {
-        // The URL for the first POST request [cite: 9]
         String url = "https://bfhldevapigw.healthrx.co.in/hiring/generateWebhook/JAVA";
 
         logger.info("Sending initial request to: {}", url);
@@ -66,16 +64,14 @@ public class ApiTaskRunner implements CommandLineRunner {
         String accessToken = response.getAccessToken();
         String finalQuery = getFinalQueryByRegNo(regNo);
 
-        if (finalQuery.isEmpty()) {
-            logger.error("Could not determine the SQL query for regNo: {}. Halting.", regNo);
+        if (finalQuery.isEmpty() || finalQuery.contains("YOUR_ODD_NUMBER_SQL_QUERY_HERE")) {
+            logger.error("Could not determine a valid SQL query for regNo: {}. Halting.", regNo);
             return;
         }
 
-        // Prepare the request body for the final submission [cite: 30, 31]
         FinalRequest finalRequestBody = new FinalRequest();
         finalRequestBody.setFinalQuery(finalQuery);
 
-        // Prepare the headers [cite: 26, 27, 28]
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.setBearerAuth(accessToken);
@@ -84,7 +80,6 @@ public class ApiTaskRunner implements CommandLineRunner {
 
         logger.info("Submitting final query to: {}", submissionUrl);
         try {
-            // Send the final POST request [cite: 25]
             String result = restTemplate.postForObject(submissionUrl, requestEntity, String.class);
             logger.info("Submission successful! Response: {}", result);
         } catch (Exception e) {
@@ -92,28 +87,21 @@ public class ApiTaskRunner implements CommandLineRunner {
         }
     }
 
-    /**
-     * Determines which SQL query to use based on the registration number.
-     * The question is assigned based on the last two digits of the regNo. 
-     */
     private String getFinalQueryByRegNo(String regNo) {
         try {
-            // Extract the last two digits of the registration number
             int lastTwoDigits = Integer.parseInt(regNo.substring(regNo.length() - 2));
 
-            // Check if the number is even or odd and return the corresponding query
             if (lastTwoDigits % 2 == 0) {
                 logger.info("Registration number ends in an even number ({}). Using Question 2.", lastTwoDigits);
-                // This is the query for even numbers (Question 2) [cite: 22]
                 return "SELECT e1.EMP_ID, e1.FIRST_NAME, e1.LAST_NAME, d.DEPARTMENT_NAME, COUNT(e2.EMP_ID) AS YOUNGER_EMPLOYEES_COUNT FROM EMPLOYEE e1 JOIN DEPARTMENT d ON e1.DEPARTMENT = d.DEPARTMENT_ID LEFT JOIN EMPLOYEE e2 ON e1.DEPARTMENT = e2.DEPARTMENT AND e2.DOB > e1.DOB GROUP BY e1.EMP_ID, e1.FIRST_NAME, e1.LAST_NAME, d.DEPARTMENT_NAME ORDER BY e1.EMP_ID DESC;";
             } else {
                 logger.info("Registration number ends in an odd number ({}). Using Question 1.", lastTwoDigits);
-                // This is the placeholder for odd numbers (Question 1) [cite: 20]
+                // Make sure to replace this if you get an odd registration number.
                 return "YOUR_ODD_NUMBER_SQL_QUERY_HERE";
             }
         } catch (NumberFormatException | StringIndexOutOfBoundsException e) {
             logger.error("Could not parse registration number: {}", regNo, e);
-            return ""; // Return empty string on error
+            return "";
         }
     }
 }

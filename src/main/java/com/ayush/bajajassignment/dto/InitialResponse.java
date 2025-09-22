@@ -1,4 +1,4 @@
-package com.example.bajaj;
+package com.ayush.bajajassignment.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
