@@ -5,7 +5,8 @@ import lombok.Data;
 
 @Data
 public class InitialResponse {
-    @JsonProperty("webhook URL to submit your answer")
+    // Correct code based on the actual API response
+    @JsonProperty("webhook")
     private String webhookUrl;
     private String accessToken;
 }
